@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "PKS_sem4_kr2/1.0.0": {
+        "runtime": {
+          "PKS_sem4_kr2.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "PKS_sem4_kr2/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
