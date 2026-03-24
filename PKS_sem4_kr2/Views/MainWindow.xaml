@@ -183,18 +183,21 @@
                                 <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding UrlComponents.Path}" 
                                           Margin="5,0"/>
 
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Параметры:" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Параметры:" FontWeight="Bold" VerticalAlignment="Top"/>
                                 <ListBox Grid.Row="4" Grid.Column="1" 
-                                         ItemsSource="{Binding UrlComponents.QueryParameters}"
-                                         MaxHeight="100"
-                                         Margin="5,0">
+                                        ItemsSource="{Binding UrlComponents.QueryParameters}"
+                                        MaxHeight="100"
+                                        Margin="5,0"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock>
-                                                <Run Text="{Binding Key}"/>
-                                                <Run Text=" = "/>
-                                                <Run Text="{Binding Value}"/>
-                                            </TextBlock>
+                                            <Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Padding="5">
+                                                <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Key}" FontWeight="Bold" Foreground="DarkBlue"/>
+                                                        <TextBlock Text=" = " Margin="5,0"/>
+                                                        <TextBlock Text="{Binding Value}" Foreground="DarkGreen"/>
+                                                    </StackPanel>
+                                                </Border>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>

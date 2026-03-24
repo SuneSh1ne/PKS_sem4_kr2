@@ -86,21 +86,31 @@ namespace PKS_sem4_kr2.Services
 
         public string GetAddressType(IPAddress address)
         {
-            if (IPAddress.IsLoopback(address))
-                return "Loopback";
-            
-            if (address.AddressFamily == AddressFamily.InterNetwork)
+            try
             {
-                byte[] bytes = address.GetAddressBytes();
-                if (bytes[0] == 10 || 
-                    (bytes[0] == 172 && bytes[1] >= 16 && bytes[1] <= 31) ||
-                    (bytes[0] == 192 && bytes[1] == 168))
-                    return "Локальный";
+                if (address == null)
+                    return "Неизвестно";
+                    
+                if (System.Net.IPAddress.IsLoopback(address))
+                    return "Loopback";
                 
-                return "Публичный";
+                if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    byte[] bytes = address.GetAddressBytes();
+                    if (bytes[0] == 10 || 
+                        (bytes[0] == 172 && bytes[1] >= 16 && bytes[1] <= 31) ||
+                        (bytes[0] == 192 && bytes[1] == 168))
+                        return "Локальный";
+                    
+                    return "Публичный";
+                }
+                
+                return "IPv6";
             }
-            
-            return "Неизвестно";
+            catch
+            {
+                return "Неизвестно";
+            }
         }
     }
 }

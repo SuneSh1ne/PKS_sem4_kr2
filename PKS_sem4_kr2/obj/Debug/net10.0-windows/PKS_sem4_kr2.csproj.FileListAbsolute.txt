@@ -1,12 +1,12 @@
-H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\App.g.cs
-H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2_MarkupCompile.cache
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\bin\Debug\net10.0-windows\PKS_sem4_kr2.exe
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\bin\Debug\net10.0-windows\PKS_sem4_kr2.deps.json
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\bin\Debug\net10.0-windows\PKS_sem4_kr2.runtimeconfig.json
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\bin\Debug\net10.0-windows\PKS_sem4_kr2.dll
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\bin\Debug\net10.0-windows\PKS_sem4_kr2.pdb
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\Views\MainWindow.g.cs
+H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\App.g.cs
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\GeneratedInternalTypeHelper.g.cs
+H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2_MarkupCompile.cache
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2_MarkupCompile.lref
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\Views\MainWindow.baml
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2.g.resources
@@ -14,6 +14,7 @@ H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2.
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2.AssemblyInfoInputs.cache
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2.AssemblyInfo.cs
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2.csproj.CoreCompileInputs.cache
+H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2.sourcelink.json
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2.dll
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\refint\PKS_sem4_kr2.dll
 H:\Projects_VS\PKS_sem4_kr2\PKS_sem4_kr2\obj\Debug\net10.0-windows\PKS_sem4_kr2.pdb

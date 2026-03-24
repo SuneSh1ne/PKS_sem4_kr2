@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using PKS_sem4_kr2.Models;
 using PKS_sem4_kr2.Services;
@@ -15,13 +16,12 @@ namespace PKS_sem4_kr2.ViewModels
         private readonly NetworkService _networkService;
         private readonly UrlAnalyzerService _urlAnalyzerService;
         
-        private NetworkInterfaceInfo _selectedInterface;
+        private NetworkInterfaceInfo _selectedNetworkInterface;
         private string _inputUrl;
         private UrlAnalyzerService.UrlComponents _urlComponents;
         private DnsInfo _dnsInfo;
         private string _pingResult;
         private string _addressType;
-        private NetworkInterfaceInfo _selectedNetworkInterface;
 
         public ObservableCollection<NetworkInterfaceInfo> NetworkInterfaces { get; set; }
         public ObservableCollection<UrlHistoryItem> UrlHistory { get; set; }
@@ -47,12 +47,12 @@ namespace PKS_sem4_kr2.ViewModels
             ClearHistoryCommand = new RelayCommand(ClearHistory);
         }
 
-        public NetworkInterfaceInfo SelectedInterface
+        public NetworkInterfaceInfo SelectedNetworkInterface
         {
-            get => _selectedInterface;
+            get => _selectedNetworkInterface;
             set
             {
-                _selectedInterface = value;
+                _selectedNetworkInterface = value;
                 OnPropertyChanged();
             }
         }
@@ -80,7 +80,7 @@ namespace PKS_sem4_kr2.ViewModels
             }
         }
 
-        public bool HasUrlComponents => UrlComponents != null;
+        public bool HasUrlComponents => UrlComponents != null && UrlComponents.IsValid;
 
         public DnsInfo DnsInfo
         {
@@ -115,16 +115,6 @@ namespace PKS_sem4_kr2.ViewModels
             }
         }
 
-        public NetworkInterfaceInfo SelectedNetworkInterface
-        {
-            get => _selectedNetworkInterface;
-            set
-            {
-                _selectedNetworkInterface = value;
-                OnPropertyChanged();
-            }
-        }
-
         private void LoadNetworkInterfaces()
         {
             try
@@ -138,78 +128,123 @@ namespace PKS_sem4_kr2.ViewModels
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Ошибка загрузки сетевых интерфейсов: {ex.Message}");
+                MessageBox.Show($"Ошибка загрузки сетевых интерфейсов: {ex.Message}");
             }
         }
 
         private void AnalyzeUrl()
         {
-            if (string.IsNullOrWhiteSpace(InputUrl))
+            try
             {
-                System.Windows.MessageBox.Show("Введите URL для анализа");
-                return;
-            }
-
-            UrlComponents = _urlAnalyzerService.ParseUrl(InputUrl);
-            
-            if (UrlComponents.IsValid)
-            {
-                UrlHistory.Add(new UrlHistoryItem
+                if (string.IsNullOrWhiteSpace(InputUrl))
                 {
-                    Url = InputUrl,
-                    AnalyzedAt = DateTime.Now,
-                    Host = UrlComponents.Host,
-                    Scheme = UrlComponents.Scheme,
-                    Port = UrlComponents.Port,
-                    IsValid = true
-                });
+                    MessageBox.Show("Введите URL для анализа", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-                try
+                DnsInfo = null;
+                PingResult = "";
+                AddressType = "";
+
+                UrlComponents = _urlAnalyzerService.ParseUrl(InputUrl);
+                
+                if (UrlComponents.IsValid)
                 {
-                    var host = UrlComponents.Host;
-                    var addresses = System.Net.Dns.GetHostAddresses(host);
-                    if (addresses.Length > 0)
+                    try
                     {
-                        AddressType = _networkService.GetAddressType(addresses[0]);
+                        UrlHistory.Add(new UrlHistoryItem
+                        {
+                            Url = InputUrl,
+                            AnalyzedAt = DateTime.Now,
+                            Host = UrlComponents.Host,
+                            Scheme = UrlComponents.Scheme,
+                            Port = UrlComponents.Port,
+                            IsValid = true
+                        });
+
+                        while (UrlHistory.Count > 50)
+                        {
+                            UrlHistory.RemoveAt(0);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Ошибка добавления в историю: {ex.Message}");
+                    }
+
+                    try
+                    {
+                        var host = UrlComponents.Host;
+                        var addresses = System.Net.Dns.GetHostAddresses(host);
+                        if (addresses.Length > 0)
+                        {
+                            AddressType = _networkService.GetAddressType(addresses[0]);
+                        }
+                        else
+                        {
+                            AddressType = "Не удалось определить";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Ошибка определения типа адреса: {ex.Message}");
+                        AddressType = "Не удалось определить";
                     }
                 }
-                catch
+                else
                 {
-                    AddressType = "Не удалось определить";
+                    MessageBox.Show(UrlComponents.ErrorMessage, "Ошибка парсинга URL", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка анализа URL: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Diagnostics.Debug.WriteLine($"Ошибка AnalyzeUrl: {ex}");
             }
         }
 
         private async Task PingHostAsync()
         {
-            if (UrlComponents == null || !UrlComponents.IsValid) return;
+            if (UrlComponents == null || !UrlComponents.IsValid || string.IsNullOrEmpty(UrlComponents.Host))
+            {
+                MessageBox.Show("Сначала проанализируйте корректный URL", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             PingResult = "Пингование...";
             try
             {
                 var result = await _networkService.PingHostAsync(UrlComponents.Host);
                 PingResult = result.Success 
-                    ? $"Успешно! Время ответа: {result.RoundtripTime} мс" 
-                    : "Хост недоступен";
+                    ? $"✓ Успешно! Время ответа: {result.RoundtripTime} мс" 
+                    : "✗ Хост недоступен";
             }
             catch (Exception ex)
             {
-                PingResult = $"Ошибка пингования: {ex.Message}";
+                PingResult = $"✗ Ошибка пингования: {ex.Message}";
             }
         }
 
         private async Task GetDnsInfoAsync()
         {
-            if (UrlComponents == null || !UrlComponents.IsValid) return;
+            if (UrlComponents == null || !UrlComponents.IsValid || string.IsNullOrEmpty(UrlComponents.Host))
+            {
+                MessageBox.Show("Сначала проанализируйте корректный URL", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             DnsInfo = null;
             try
             {
                 DnsInfo = await _networkService.GetDnsInfoAsync(InputUrl);
+                if (DnsInfo == null)
+                {
+                    MessageBox.Show("Не удалось получить DNS информацию для указанного хоста", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Ошибка получения DNS информации: {ex.Message}");
+                MessageBox.Show($"Ошибка получения DNS информации: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
